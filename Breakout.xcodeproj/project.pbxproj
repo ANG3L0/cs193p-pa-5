@@ -15,6 +15,7 @@
 		2F76F8371CA0C91E005AF3BF /* BreakoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F8361CA0C91E005AF3BF /* BreakoutTests.swift */; };
 		2F76F8421CA0C91E005AF3BF /* BreakoutUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F8411CA0C91E005AF3BF /* BreakoutUITests.swift */; };
 		2F76F8501CA0D577005AF3BF /* BreakoutBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F84F1CA0D577005AF3BF /* BreakoutBehavior.swift */; };
+		2F76F8521CA22F0A005AF3BF /* BezierPathsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F8511CA22F0A005AF3BF /* BezierPathsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		2F76F8411CA0C91E005AF3BF /* BreakoutUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakoutUITests.swift; sourceTree = "<group>"; };
 		2F76F8431CA0C91E005AF3BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F76F84F1CA0D577005AF3BF /* BreakoutBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBehavior.swift; sourceTree = "<group>"; };
+		2F76F8511CA22F0A005AF3BF /* BezierPathsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BezierPathsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 				2F76F8231CA0C91D005AF3BF /* BreakoutViewController.swift */,
 				2F76F84F1CA0D577005AF3BF /* BreakoutBehavior.swift */,
 				2F76F8251CA0C91D005AF3BF /* Main.storyboard */,
+				2F76F8511CA22F0A005AF3BF /* BezierPathsView.swift */,
 				2F76F8281CA0C91D005AF3BF /* Assets.xcassets */,
 				2F76F82A1CA0C91D005AF3BF /* LaunchScreen.storyboard */,
 				2F76F82D1CA0C91D005AF3BF /* Info.plist */,
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F76F8521CA22F0A005AF3BF /* BezierPathsView.swift in Sources */,
 				2F76F8501CA0D577005AF3BF /* BreakoutBehavior.swift in Sources */,
 				2F76F8241CA0C91D005AF3BF /* BreakoutViewController.swift in Sources */,
 				2F76F8221CA0C91D005AF3BF /* AppDelegate.swift in Sources */,

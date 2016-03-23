@@ -4,9 +4,9 @@ You get rid of a bunch of blue squares.  Supposedly, this assignment requires us
 ## Rules
 
 ## Required Tasks
-- [ ] Create a straightforward Breakout game using Dynamic Animator. See the image in the Screen Shots section below to get a general idea of the game, but your UI should not look exactly like the Screen Shot. Creativity is encouraged and will be rewarded.
-- [ ] When a brick is hit, some animation of the brick must occur. For example, the brick might flip over before fading out or it might flash another color before disappearing, etc. Show us that you know how to animate changes to a UIView.
-- [ ] In addition to supporting a pan gesture to move the game’s paddle, you must support a tap gesture which pushes the bouncing ball in a random direction an appropriate (i.e. noticeable, but not game-destroying!) amount.
+- [x] Create a straightforward Breakout game using Dynamic Animator. See the image in the Screen Shots section below to get a general idea of the game, but your UI should not look exactly like the Screen Shot. Creativity is encouraged and will be rewarded.
+- [x] When a brick is hit, some animation of the brick must occur. For example, the brick might flip over before fading out or it might flash another color before disappearing, etc. Show us that you know how to animate changes to a UIView.
+- [x] In addition to supporting a pan gesture to move the game’s paddle, you must support a tap gesture which pushes the bouncing ball in a random direction an appropriate (i.e. noticeable, but not game-destroying!) amount.
 - [ ] When all the bricks have been eliminated (or the game is otherwise over), put up an alert and then reset the bricks for the next game.
 - [ ] Your game should be designed to support at least 4 different variables that control the way your game is played (e.g. number of bricks, ball bounciness, number of bouncing balls, a gravitational pull, special bricks that cause interesting behavior, etc.).
 - [ ] Use a tab bar controller to add a second tab to your UI which contains a static table view with controls that let the user set these 4+ different variables to meaningful game-play values. Your game should start using them immediately (i.e. as soon as you click back on the main game play tab).
@@ -26,3 +26,4 @@ differences exist between the two platforms (if any).
 ## Demo
 
 ## Other Thoughts
+  * I did not put my drawing methods into `viewDidLayoutSubviews()` as it seems to be called multiple times (and thus draw routines will be called multiple times).  Probably there is a better way to do this.

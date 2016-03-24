@@ -128,6 +128,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     //MARK: - Collision delegates
     func collisionBehavior(behavior: UICollisionBehavior, endedContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
+//        print(identifier)
         if identifier != nil {
             let idString = String(identifier!)
             if idString.hasPrefix(BreakoutViewController.Boundary.Block) {

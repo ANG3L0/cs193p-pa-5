@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F10A9231CA35E69000F8277 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F10A9221CA35E69000F8277 /* SettingsTableViewController.swift */; };
 		2F76F8221CA0C91D005AF3BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F8211CA0C91D005AF3BF /* AppDelegate.swift */; };
 		2F76F8241CA0C91D005AF3BF /* BreakoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F8231CA0C91D005AF3BF /* BreakoutViewController.swift */; };
 		2F76F8271CA0C91D005AF3BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F76F8251CA0C91D005AF3BF /* Main.storyboard */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2F10A9221CA35E69000F8277 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		2F76F81E1CA0C91D005AF3BF /* Breakout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breakout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F76F8211CA0C91D005AF3BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F76F8231CA0C91D005AF3BF /* BreakoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakoutViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				2F76F8211CA0C91D005AF3BF /* AppDelegate.swift */,
 				2F76F8231CA0C91D005AF3BF /* BreakoutViewController.swift */,
 				2F76F84F1CA0D577005AF3BF /* BreakoutBehavior.swift */,
+				2F10A9221CA35E69000F8277 /* SettingsTableViewController.swift */,
 				2F76F8251CA0C91D005AF3BF /* Main.storyboard */,
 				2F76F8511CA22F0A005AF3BF /* BezierPathsView.swift */,
 				2F76F8281CA0C91D005AF3BF /* Assets.xcassets */,
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F76F8521CA22F0A005AF3BF /* BezierPathsView.swift in Sources */,
+				2F10A9231CA35E69000F8277 /* SettingsTableViewController.swift in Sources */,
 				2F76F8501CA0D577005AF3BF /* BreakoutBehavior.swift in Sources */,
 				2F76F8241CA0C91D005AF3BF /* BreakoutViewController.swift in Sources */,
 				2F76F8221CA0C91D005AF3BF /* AppDelegate.swift in Sources */,
@@ -492,6 +496,7 @@
 				2F76F8481CA0C91E005AF3BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2F76F8491CA0C91E005AF3BF /* Build configuration list for PBXNativeTarget "BreakoutTests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +505,7 @@
 				2F76F84B1CA0C91E005AF3BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2F76F84C1CA0C91E005AF3BF /* Build configuration list for PBXNativeTarget "BreakoutUITests" */ = {
 			isa = XCConfigurationList;
@@ -508,6 +514,7 @@
 				2F76F84E1CA0C91E005AF3BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

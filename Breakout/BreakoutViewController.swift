@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BreakoutViewController: UIViewController, CollisionViewHandler {
+class BreakoutViewController: UIViewController, CollisionViewHandler, SettingsViewDelegate {
     // MARK: - rules
     /*
     Rules, try to get rid of all the blue blocks, and do not hit the red ones.  Hitting red ones shortens your paddle.
@@ -27,9 +27,19 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
     private var paddleView: UIView?
     private var ballView: UIView?
     private var numberOfBlueBallsLeft = 0
-    private var gameIsPaused = false
+    private var redBlocksOn: Bool = false
+    private var difficulty: Int = 0
+    private var drunkenness: Int = 0
+    private var redDidChange = true
+    private var timer = NSTimer()
+    private var maxSpeedScale = Draw.MaxSpeedScale
+    private var minSpeedScale = Draw.MinSpeedScale
+    private var viewBuffer: [UIView] = []
+
     
     private var alert = UIAlertController(title: "Congratulations...", message: "you played yourself.", preferredStyle: UIAlertControllerStyle.Alert)
+    
+    private var defaults = NSUserDefaults.standardUserDefaults()
     
     lazy var animator: UIDynamicAnimator = {
         let lazilyCreatedByDynamicAnimator = UIDynamicAnimator(referenceView: self.gameView)
@@ -40,6 +50,10 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let settingsNavigator = self.tabBarController?.viewControllers![1] as! UINavigationController
+        let settingsView = settingsNavigator.viewControllers.first as! SettingsTableViewController
+        settingsView.delegate = self
+        
         alert.addAction(
             UIAlertAction(
             title: "Restart the game",
@@ -57,8 +71,16 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
             }
         )
     }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+    }
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if let ball = ballView {
+            breakoutBehavior.startThe(ball)
+        }
+        updateSettings()
         //this cannot draw paddle since the tabbar has not been put in yet and thus will be hidden underneath.
         if breakoutBehavior == nil {
             breakoutBehavior = BreakoutBehavior(delegate: self)
@@ -70,8 +92,8 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
     }
     
     override func viewDidAppear(animated: Bool) {
-        unpauseGameIf(gameIsPaused)
-        gameIsPaused = false
+        super.viewDidAppear(animated)
+        cleanAnimation()
         if paddleView == nil {
             drawPaddle()
         }
@@ -80,27 +102,85 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
         }
     }
     override func viewWillDisappear(animated: Bool) {
-        //GAME STATE DOES NOT NEED TO BE SAVED PERSISTENTLY SO DONT NSUSERDEFAULT THIS
-        //save off velocity for ball
-        //save off position for paddle
+        super.viewWillDisappear(animated)
+        breakoutBehavior.stopThe(ballView!)
     }
     override func viewDidDisappear(animated: Bool) {
-        gameIsPaused = true
+        super.viewDidDisappear(animated)
+        timer.invalidate()
     }
     // MARK: - Pause/game state-related helper functions
-    func unpauseGameIf(paused: Bool) {
+    private func updateSettings() {
+        difficulty = defaults.objectForKey(SettingsTableViewController.Settings.Difficulty) as? Int ?? SettingsTableViewController.Difficulty.Easy
+        drunkenness = defaults.objectForKey(SettingsTableViewController.Settings.Drunk) as? Int ??
+            SettingsTableViewController.DrunkLevel.Sober
+        let newRedStatus = defaults.objectForKey(SettingsTableViewController.Settings.Red) as? Bool ?? true
+        redDidChange = redBlocksOn != newRedStatus
+        redBlocksOn = newRedStatus
+        changeRedSetting()
+        changeDrunkSettings()
+        changeDifficultySettings()
+    }
+    private func cleanAnimation() {
+        for view in viewBuffer {
+            view.layer.removeAllAnimations()
+            view.removeFromSuperview()
+        }
+        viewBuffer = []
+    }
+    private func changeRedSetting() {
+        //two scenarios. 
+        //1) we just turned on redness and all the blocks are blue
+        //2) we just turned off redness and some blocks are red
+        //1)
+        if redBlocksOn && redDidChange {
+            // don't do any work if we are alrady in red mode
+            for (_, view) in blockViews {
+                updateBlockViewColor(view!)
+            }
+        }
+        //2)
+        if !redBlocksOn {
+            for (_, view) in blockViews {
+                view?.backgroundColor = Draw.GoodColor
+            }
+        }
+    }
+    private func changeDrunkSettings() {
+        timer.invalidate()
+        if drunkenness == SettingsTableViewController.DrunkLevel.Sober {
+            return
+        } else {
+            let interval = 1 / Double(drunkenness)
+            timer.tolerance = interval * 0.2
+            timer = NSTimer.scheduledTimerWithTimeInterval(
+                interval,
+                target: self,
+                selector: "fire:",
+                userInfo: nil,
+                repeats: true)
+        }
+    }
+    private func changeDifficultySettings() {
+        let skew = CGFloat(difficulty - 1)
+        let speedOffset = skew * Draw.DifficultySpeedScale
+        maxSpeedScale = Draw.MaxSpeedScale + speedOffset
+        minSpeedScale = Draw.MinSpeedScale + speedOffset
+        if (breakoutBehavior != nil && ballView != nil) {
+            breakoutBehavior.updateSpeedLimits()
+        }
         
     }
     
-    // MARK: - Gestures
+    func fire(timer: NSTimer) {
+        //1 20 2 10
+        let scale = Draw.DrunkScale / Double(drunkenness)
+        pushBallWith(scale)
+    }
     
+    // MARK: - Gestures
     @IBAction func pushBall(gesture: UITapGestureRecognizer) {
-        let modulo = Double(gameView.bounds.width / Draw.Subdivisions)
-        print(modulo)
-        let x = ( Double(arc4random()) % modulo ) / 10
-        let y = ( -Double(arc4random()) % modulo ) / 10
-        let velocity = CGPoint(x: x, y: y)
-        breakoutBehavior.pushWith(velocity, item: ballView!, animator: animator)
+        pushBallWith(Draw.PushBallScale)
     }
     
     @IBAction func movePaddle(gesture: UIPanGestureRecognizer) {
@@ -138,7 +218,8 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
         static let GoodColor = UIColor.blueColor()
         static let BadColor = UIColor.redColor()
         static let ScreenHeight = CGFloat(1.0/3.0)
-        static let NumberOfRows = CGFloat(1)
+        static let NumberOfRowsMax = CGFloat(25)
+        static let NumberOfRowsMin = CGFloat(5)
         static let VerticalGap = CGFloat(1.55)
         static let PaddleColor = UIColor.purpleColor()
         static let PaddleHeightScale = CGFloat(8.0)
@@ -146,8 +227,19 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
         static let BallWidthScale = PaddleHeightScale * CGFloat(2)
         static let BallColor = UIColor.greenColor()
         static let SpringScale = CGFloat(20)
-        static let MaxSpeedScale = CGFloat(0.85)
-        static let MinSpeedScale = CGFloat(0.50)
+        static var MaxSpeedScale = CGFloat(0.85)
+        static var MinSpeedScale = CGFloat(0.50)
+        static let PushBallScale = Double(20.0)
+        static let DrunkScale = Double(120)
+        static let DifficultySpeedScale = CGFloat(0.4)
+    }
+    
+    private func pushBallWith(scale: Double) {
+        let modulo = Double(gameView.bounds.width / Draw.Subdivisions)
+        let x = ( Double(arc4random()) % modulo ) / scale
+        let y = ( -Double(arc4random()) % modulo ) / scale
+        let velocity = CGPoint(x: x, y: y)
+        breakoutBehavior.pushWith(velocity, item: ballView!, animator: animator)
     }
     
     struct Boundary {
@@ -175,7 +267,7 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
     
     private func drawBall() {
         let x = gameView.bounds.midX - ballSize.width / 2
-        let y = gameView.bounds.height - paddleSize.height * 16
+        let y = gameView.bounds.height - paddleSize.height * 4
         let frame = CGRect(origin: CGPoint(x: CGFloat(x), y: y), size: ballSize)
         breakoutBehavior.addBall(ballView(frame))
     }
@@ -185,7 +277,9 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
         //every odd row will have 11 blocks and every even row will have 10 blocks
         //horizontal area subdivided into 32 for 11 blocks or 10 blocks.
         let blockGap = (gameView.bounds.size.width / Draw.Subdivisions) * Draw.GapDivisionWidth
-        for row in 0..<Int(Draw.NumberOfRows) {
+        let scale = (defaults.objectForKey(SettingsTableViewController.Settings.Rows) as? Float) ?? Float(0.5)
+        let numberOfRows = getNumberOfRowsFrom(scale)
+        for row in 0..<numberOfRows {
             var frame = CGRect(origin: CGPointZero, size: blockSize)
             let newY = CGFloat(row) * (blockSize.height + (blockSize.height / Draw.VerticalGap))
             frame.origin.y = round(newY * gameView.contentScaleFactor) / gameView.contentScaleFactor
@@ -207,6 +301,11 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
             
         }
     }
+    func getNumberOfRowsFrom(scale: Float) -> Int {
+        let numRowsFloat = Int(CGFloat(scale) * (Draw.NumberOfRowsMax - Draw.NumberOfRowsMin))
+        return numRowsFloat + Int(Draw.NumberOfRowsMin)
+    }
+    
     private func drawPaddle() {
         let x = gameView.bounds.midX - paddleSize.width / CGFloat(2.0)
         let y = gameView.bounds.size.height - paddleSize.height
@@ -229,19 +328,22 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
     
     private func blockView(frame: CGRect) -> UIView {
         let blockView = UIView(frame: frame)
-        let randomNum = arc4random() % 100
+
+        return updateBlockViewColor(blockView)
+    }
+    private func updateBlockViewColor(block: UIView) -> UIView {
+        let randomNum = redBlocksOn ? arc4random() % 100 : 100
         if randomNum < 5 {
-            blockView.backgroundColor = Draw.BadColor
+            block.backgroundColor = Draw.BadColor
         } else {
-            blockView.backgroundColor = Draw.GoodColor
+            block.backgroundColor = Draw.GoodColor
             ++numberOfBlueBallsLeft
         }
-        return blockView
+        return block
     }
     
     //MARK: - Delegate Methods
     func updateOnCollision(identifier: String) {
-        //TODO velocity should be relative to screen size, otherwise ipad/iphone play very differently.
         gameView.setPath(nil, named: identifier)
         let springVelocity = gameView.bounds.width / Draw.SpringScale
         let xRand = (CGFloat(Float(arc4random()) / Float(UINT32_MAX)))*CGFloat(2.0) - CGFloat(1)
@@ -254,25 +356,25 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
             initialSpringVelocity: springVelocity,
             options: UIViewAnimationOptions.CurveEaseInOut,
             animations: { currentView.frame.offsetInPlace(dx: dx, dy: dy) },
-            completion: { [unowned self] in
+            completion: {
                 if $0 {
                     currentView.removeFromSuperview()
-                    if (currentView.backgroundColor == Draw.GoodColor) {
-                        --self.numberOfBlueBallsLeft
-                        self.gameEndCheck()
-                    }
                 }
             }
         )
+        if (currentView.backgroundColor == Draw.GoodColor) {
+            --self.numberOfBlueBallsLeft
+            self.gameEndCheck()
+        }
         blockViews.removeValueForKey(identifier)
+        viewBuffer.append(currentView)
     }
     func getSpeedLimit() -> CGFloat {
         let width = gameView.bounds.width
-        print(width)
-        return 2 * width * width *  Draw.MaxSpeedScale
+        return 2 * width * width * maxSpeedScale
     }
     func getSpeedMinimum() -> CGFloat {
-        return getSpeedLimit() * Draw.MinSpeedScale
+        return getSpeedLimit() * minSpeedScale
     }
     private func gameEndCheck() {
         if (numberOfBlueBallsLeft == 0) {
@@ -294,6 +396,9 @@ class BreakoutViewController: UIViewController, CollisionViewHandler {
 
 func + (left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x + right.x, y: left.y + right.y)
+}
+prefix func - (point: CGPoint) -> CGPoint {
+    return CGPoint(x: -point.x, y: -point.y)
 }
 
 func * (left: Int, right: CGFloat) -> CGFloat {

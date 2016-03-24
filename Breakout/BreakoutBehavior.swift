@@ -18,8 +18,9 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     var collisionViewHandler: CollisionViewHandler?
     
-    var limit: CGFloat = 0
-    var min: CGFloat = 0
+    private var limit: CGFloat = 0
+    private var min: CGFloat = 0
+    private var ballVelocity = CGPoint(x: 0, y: 0)
     
     private struct Speed {
         static let Delta = CGFloat(0.2)
@@ -30,16 +31,8 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         let lazilyCreatedBallBehavior = UIDynamicItemBehavior()
         lazilyCreatedBallBehavior.elasticity = 1.0
         lazilyCreatedBallBehavior.friction = 0.0
-        lazilyCreatedBallBehavior.action = { [unowned lazilyCreatedBallBehavior] in
-            if let view = lazilyCreatedBallBehavior.items.first {
-                let velocity = lazilyCreatedBallBehavior.linearVelocityForItem(view)
-                let speed = velocity.x * velocity.x + velocity.y * velocity.y
-                if speed > limit {
-                    lazilyCreatedBallBehavior.addLinearVelocity(CGPoint(x: velocity.x * Speed.UnDelta, y: velocity.y * Speed.UnDelta), forItem:  view)
-                } else if speed < minimum {
-                    lazilyCreatedBallBehavior.addLinearVelocity(CGPoint(x: velocity.x * Speed.Delta, y: velocity.y * Speed.Delta), forItem: view)
-                }
-            }
+        lazilyCreatedBallBehavior.action = { [unowned self, lazilyCreatedBallBehavior] in
+            self.speedActionUpdate(lazilyCreatedBallBehavior)
         }
         return lazilyCreatedBallBehavior
     }(self.limit, self.min)
@@ -47,7 +40,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     lazy var pushBehavior: UIPushBehavior = {
         let lazilyCreatedPushBehavior = UIPushBehavior(items: [], mode: .Instantaneous)
         lazilyCreatedPushBehavior.angle = CGFloat(-M_PI_2)
-        lazilyCreatedPushBehavior.magnitude = 1
+        lazilyCreatedPushBehavior.magnitude = self.min
         lazilyCreatedPushBehavior.active = true
         return lazilyCreatedPushBehavior
     }()
@@ -61,15 +54,30 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     init(delegate: BreakoutViewController) {
         super.init()
         collisionViewHandler = delegate
-        self.limit = collisionViewHandler!.getSpeedLimit()
-        self.min = collisionViewHandler!.getSpeedMinimum()
+        updateSpeedLimits()
         collider.collisionDelegate = self
         addChildBehavior(pushBehavior)
         addChildBehavior(collider)
         addChildBehavior(ballBehavior)
     }
     
-    //MARK: - Add element methods    
+    func updateSpeedLimits() {
+        self.limit = collisionViewHandler!.getSpeedLimit()
+        self.min = collisionViewHandler!.getSpeedMinimum()
+    }
+    func speedActionUpdate(behavior: UIDynamicItemBehavior) {
+        if let view = behavior.items.first {
+            let velocity = ballBehavior.linearVelocityForItem(view)
+            let speed = velocity.x * velocity.x + velocity.y * velocity.y
+            if speed > self.limit {
+                ballBehavior.addLinearVelocity(CGPoint(x: velocity.x * Speed.UnDelta, y: velocity.y * Speed.UnDelta), forItem:  view)
+            } else if speed < self.min {
+                ballBehavior.addLinearVelocity(CGPoint(x: velocity.x * Speed.Delta, y: velocity.y * Speed.Delta), forItem: view)
+            }
+        }
+    }
+    
+    //MARK: - Add element methods
     func addBlock(block: UIView, path: UIBezierPath, named: String) {
         dynamicAnimator?.referenceView?.addSubview(block)
         collider.addBoundaryWithIdentifier(named, forPath: path)
@@ -88,10 +96,21 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         collider.addItem(ball)
         ballBehavior.addItem(ball)
     }
+
     func removeBall(ball: UIView) {
         if collider.items.count > 0 {
             collider.removeItem(ball)
             ball.removeFromSuperview()
+        }
+    }
+    func stopThe(ball: UIView) {
+        let velocity = ballBehavior.linearVelocityForItem(ball)
+        ballVelocity = velocity
+        ballBehavior.addLinearVelocity(-velocity, forItem: ball)
+    }
+    func startThe(ball: UIView) {
+        if ballBehavior.linearVelocityForItem(ball) != ballVelocity {
+            ballBehavior.addLinearVelocity(ballVelocity, forItem: ball)
         }
     }
     

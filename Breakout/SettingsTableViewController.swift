@@ -8,11 +8,16 @@
 
 import UIKit
 
+protocol SettingsViewDelegate: class {
+    func getNumberOfRowsFrom(scale: Float) -> Int
+}
+
 class SettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var redBlocksEnable: UISwitch!
     
     @IBOutlet weak var numRowsSlider: UISlider!
+    @IBOutlet weak var rowsLabel: UILabel!
     
     @IBOutlet weak var difficultyCtl: UISegmentedControl!
     
@@ -20,19 +25,35 @@ class SettingsTableViewController: UITableViewController {
     
     private var defaults = NSUserDefaults.standardUserDefaults()
     
+    @IBAction func rowSliderChanged(sender: UISlider) {
+        updateRowsLabel(sender.value)
+        saveSettings()
+    }
+    @IBAction func difficultyChanged(sender: UISegmentedControl) {
+        saveSettings()
+    }
+    @IBAction func drunkennessChanged(sender: UISegmentedControl) {
+        saveSettings()
+    }
+    @IBAction func redEnableChanged(sender: UISwitch) {
+        saveSettings()
+    }
+    
+    var delegate: BreakoutViewController?
+    
     struct Settings {
         static let Red = "Red Blocks Enable in Breakout Game"
         static let Rows = "Number of Rows in Breakout Game"
         static let Difficulty = "Max ball speed and proportion of red balls"
         static let Drunk = "Randomness in Ball Movement"
     }
-    private struct Difficulty {
+    struct Difficulty {
         static let Easy = 0
         static let Medium = 1
         static let Hard = 2
         static let BeastMode = 3
     }
-    private struct DrunkLevel {
+    struct DrunkLevel {
         static let Sober = 0
         static let Drunk = 1
         static let DUI = 2
@@ -41,10 +62,13 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initSettings()
+        updateRowsLabel(numRowsSlider.value)
     }
     
     override func viewWillDisappear(animated: Bool) {
-        saveSettings()
+        
+    }
+    override func viewDidDisappear(animated: Bool) {
     }
     
     //MARK: - Helper methods for setting state
@@ -75,6 +99,16 @@ class SettingsTableViewController: UITableViewController {
             drunkCtl.selectedSegmentIndex = drunk as! Int
         } else {
             drunkCtl.selectedSegmentIndex = DrunkLevel.Sober
+        }
+    }
+    //MARK: - Drawing methods
+    private func updateRowsLabel(scale: Float) {
+        if delegate != nil {
+            if let rows = delegate?.getNumberOfRowsFrom(scale) {
+                if rowsLabel != nil {
+                    rowsLabel.text = String(rows)
+                }
+            }
         }
     }
 

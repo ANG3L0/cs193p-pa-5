@@ -41,6 +41,10 @@ Second demo shows that the game is paused when I change settings.  It also shows
 Third demo shows the winning screen.  
 ![victory](victory.gif)
 
+### Works on Ipad too...kinda
+UILabel for score in retrospect should have been based on view's height instead.  Likewise for the table view settings as well as the tab bar at the bottom.  But I'm sure if you have a large iPad this is workable.
+![ipad](ipad.gif)
+
 
 ## Other Thoughts
   * Pausing extra credit is pretty much necessary.  Switching to the other tab makes it so that the `animateWithOptions` never completes.

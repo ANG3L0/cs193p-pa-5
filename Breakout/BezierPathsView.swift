@@ -10,7 +10,7 @@ import UIKit
 
 class BezierPathsView: UIView {
 
-    private var bezierPaths = [String:UIBezierPath]()
+    var bezierPaths = [String:UIBezierPath]()
     
     
     func setPath(path: UIBezierPath?, named name: String) {
@@ -20,7 +20,7 @@ class BezierPathsView: UIView {
     
     override func drawRect(rect: CGRect) {
         for (_, path) in bezierPaths {
-//            UIColor.whiteColor().set()
+            UIColor.whiteColor().set()
             path.stroke()
         }
     }

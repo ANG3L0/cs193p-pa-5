@@ -20,12 +20,57 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jfm-j1-SNk" customClass="BezierPathsView" customModule="Breakout" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xZv-2k-VaS">
+                                        <rect key="frame" x="8" y="522" width="53.5" height="20.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="54" id="8ZW-dR-RNG"/>
+                                            <constraint firstAttribute="height" constant="21" id="va5-i2-gBn"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="8ZW-dR-RNG"/>
+                                                <exclude reference="va5-i2-gBn"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="znQ-7Q-9Xc">
+                                        <rect key="frame" x="69" y="522" width="10.5" height="20.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="54" id="8ya-tw-Q6f"/>
+                                            <constraint firstAttribute="height" constant="21" id="gXf-Os-r8Q"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="8ya-tw-Q6f"/>
+                                                <exclude reference="gXf-Os-r8Q"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="xZv-2k-VaS" firstAttribute="leading" secondItem="Jfm-j1-SNk" secondAttribute="leadingMargin" id="0UA-hn-OXS"/>
+                                    <constraint firstItem="znQ-7Q-9Xc" firstAttribute="leading" secondItem="xZv-2k-VaS" secondAttribute="trailing" constant="8" id="ScE-vD-0lE"/>
+                                    <constraint firstItem="znQ-7Q-9Xc" firstAttribute="centerY" secondItem="xZv-2k-VaS" secondAttribute="centerY" id="aMj-t2-Xcr"/>
+                                    <constraint firstAttribute="bottom" secondItem="znQ-7Q-9Xc" secondAttribute="bottom" constant="8" id="lTU-QH-szv"/>
+                                    <constraint firstItem="xZv-2k-VaS" firstAttribute="bottom" secondItem="Jfm-j1-SNk" secondAttribute="bottomMargin" id="pPZ-z2-xyI"/>
+                                </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Ibe-aO-8jT" appends="YES" id="Kzu-F2-UIT"/>
                                     <outletCollection property="gestureRecognizers" destination="iG2-Oe-Pem" appends="YES" id="9tg-xL-nRI"/>
                                 </connections>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qOw-Uo-l6u">
+                                <rect key="frame" x="-11" y="-6" width="83" height="5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -36,9 +81,10 @@
                             <constraint firstItem="Jfm-j1-SNk" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rVl-cz-rrc"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Breakout" id="KHI-yX-DQU"/>
+                    <tabBarItem key="tabBarItem" title="Breakout" selectedImage="breakout" id="KHI-yX-DQU"/>
                     <connections>
                         <outlet property="gameView" destination="Jfm-j1-SNk" id="QHj-Jz-96b"/>
+                        <outlet property="score" destination="znQ-7Q-9Xc" id="K8z-ne-Occ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -285,4 +331,7 @@
             <point key="canvasLocation" x="2063" y="567"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="breakout" width="480" height="480"/>
+    </resources>
 </document>

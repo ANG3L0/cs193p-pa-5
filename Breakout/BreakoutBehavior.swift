@@ -12,6 +12,7 @@ protocol CollisionViewHandler: class {
     func updateOnCollision(identifier: String)
     func getSpeedLimit() -> CGFloat
     func getSpeedMinimum() -> CGFloat
+    func endGame()
 }
 
 class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
@@ -21,6 +22,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     private var limit: CGFloat = 0
     private var min: CGFloat = 0
     private var ballVelocity = CGPoint(x: 0, y: 0)
+    var loseArea = CGRect()
     
     private struct Speed {
         static let Delta = CGFloat(0.2)
@@ -31,8 +33,9 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         let lazilyCreatedBallBehavior = UIDynamicItemBehavior()
         lazilyCreatedBallBehavior.elasticity = 1.0
         lazilyCreatedBallBehavior.friction = 0.0
-        lazilyCreatedBallBehavior.action = { [unowned self, lazilyCreatedBallBehavior] in
-            self.speedActionUpdate(lazilyCreatedBallBehavior)
+        lazilyCreatedBallBehavior.action = { [weak self, lazilyCreatedBallBehavior] in
+            self!.speedActionUpdate(lazilyCreatedBallBehavior)
+//            self.checkBoundary(lazilyCreatedBallBehavior)
         }
         return lazilyCreatedBallBehavior
     }(self.limit, self.min)
@@ -76,6 +79,15 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
             }
         }
     }
+//    func checkBoundary(behavior: UIDynamicItemBehavior) {
+//        if let view = behavior.items.first {
+//            if loseArea.contains(view.center) {
+//                print("you lost")
+//                collider.removeItem(view)
+//            }
+//        }
+//
+//    }
     
     //MARK: - Add element methods
     func addBlock(block: UIView, path: UIBezierPath, named: String) {
@@ -113,14 +125,26 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
             ballBehavior.addLinearVelocity(ballVelocity, forItem: ball)
         }
     }
+    func removeAll() {
+        for item in collider.items {
+            collider.removeItem(item)
+        }
+        for item in ballBehavior.items {
+            ballBehavior.removeItem(item)
+        }
+        collider.removeAllBoundaries()
+        removeChildBehavior(pushBehavior)
+        removeChildBehavior(collider)
+        removeChildBehavior(ballBehavior)
+    }
     
     
     //MARK: - Velocity methods
     func pushWith(velocity: CGPoint, item: UIView, animator: UIDynamicAnimator) {
         pushBehavior = UIPushBehavior(items: [item], mode: .Instantaneous)
         pushBehavior.pushDirection = CGVectorMake(velocity.x, velocity.y)
-        pushBehavior.action = { [unowned pushBehavior] in
-            pushBehavior.dynamicAnimator?.removeBehavior(pushBehavior)
+        pushBehavior.action = { [weak pushBehavior] in
+            pushBehavior!.dynamicAnimator?.removeBehavior(pushBehavior!)
         }
         animator.addBehavior(pushBehavior)
 
@@ -128,7 +152,6 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     //MARK: - Collision delegates
     func collisionBehavior(behavior: UICollisionBehavior, endedContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
-//        print(identifier)
         if identifier != nil {
             let idString = String(identifier!)
             if idString.hasPrefix(BreakoutViewController.Boundary.Block) {
@@ -136,5 +159,18 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
                 collisionViewHandler?.updateOnCollision(idString)
             }
         }
+    }
+    func collisionBehavior(behavior: UICollisionBehavior, beganContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?, atPoint p: CGPoint) {
+        if identifier != nil {
+            let idString = String(identifier!)
+            if idString == BreakoutViewController.Boundary.Bottom {
+                collider.removeItem(item)
+                let velocity = ballBehavior.linearVelocityForItem(item)
+                ballBehavior.addLinearVelocity(-velocity, forItem: item)
+                ballBehavior.addLinearVelocity(CGPoint(x: 0, y: 1), forItem: item)
+                collisionViewHandler!.endGame()
+            }
+        }
+
     }
 }

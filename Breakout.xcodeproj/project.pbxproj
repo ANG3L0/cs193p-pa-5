@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2F10A9231CA35E69000F8277 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F10A9221CA35E69000F8277 /* SettingsTableViewController.swift */; };
+		2F10A9251CA4E817000F8277 /* Programming_ Project 5.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2F10A9241CA4E817000F8277 /* Programming_ Project 5.pdf */; };
 		2F76F8221CA0C91D005AF3BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F8211CA0C91D005AF3BF /* AppDelegate.swift */; };
 		2F76F8241CA0C91D005AF3BF /* BreakoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F76F8231CA0C91D005AF3BF /* BreakoutViewController.swift */; };
 		2F76F8271CA0C91D005AF3BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F76F8251CA0C91D005AF3BF /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		2F10A9221CA35E69000F8277 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		2F10A9241CA4E817000F8277 /* Programming_ Project 5.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Programming_ Project 5.pdf"; sourceTree = "<group>"; };
 		2F76F81E1CA0C91D005AF3BF /* Breakout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breakout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F76F8211CA0C91D005AF3BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F76F8231CA0C91D005AF3BF /* BreakoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakoutViewController.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 		2F76F8151CA0C91D005AF3BF = {
 			isa = PBXGroup;
 			children = (
+				2F10A9241CA4E817000F8277 /* Programming_ Project 5.pdf */,
 				2F76F8201CA0C91D005AF3BF /* Breakout */,
 				2F76F8351CA0C91E005AF3BF /* BreakoutTests */,
 				2F76F8401CA0C91E005AF3BF /* BreakoutUITests */,
@@ -238,6 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F10A9251CA4E817000F8277 /* Programming_ Project 5.pdf in Resources */,
 				2F76F82C1CA0C91D005AF3BF /* LaunchScreen.storyboard in Resources */,
 				2F76F8291CA0C91D005AF3BF /* Assets.xcassets in Resources */,
 				2F76F8271CA0C91D005AF3BF /* Main.storyboard in Resources */,

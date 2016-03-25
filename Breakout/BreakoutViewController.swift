@@ -112,6 +112,9 @@ class BreakoutViewController: UIViewController, CollisionViewHandler, SettingsVi
         super.viewDidDisappear(animated)
         timer.invalidate()
     }
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
     // MARK: - Pause/game state-related helper functions
     private func updateSettings() {
         difficulty = defaults.objectForKey(SettingsTableViewController.Settings.Difficulty) as? Int ?? SettingsTableViewController.Difficulty.Easy
@@ -138,14 +141,17 @@ class BreakoutViewController: UIViewController, CollisionViewHandler, SettingsVi
         //1)
         if redBlocksOn && redDidChange {
             // don't do any work if we are alrady in red mode
+            numberOfBlueBallsLeft = 0
             for (_, view) in blockViews {
                 updateBlockViewColor(view!)
             }
         }
         //2)
         if !redBlocksOn {
+            numberOfBlueBallsLeft = 0
             for (_, view) in blockViews {
                 view?.backgroundColor = Draw.GoodColor
+                ++numberOfBlueBallsLeft
             }
         }
     }
@@ -293,6 +299,7 @@ class BreakoutViewController: UIViewController, CollisionViewHandler, SettingsVi
         //want staggered blocks:
         //every odd row will have 11 blocks and every even row will have 10 blocks
         //horizontal area subdivided into 32 for 11 blocks or 10 blocks.
+        print("draw?")
         let blockGap = (gameView.bounds.size.width / Draw.Subdivisions) * Draw.GapDivisionWidth
         let scale = (defaults.objectForKey(SettingsTableViewController.Settings.Rows) as? Float) ?? Float(0.5)
         let numberOfRows = getNumberOfRowsFrom(scale)

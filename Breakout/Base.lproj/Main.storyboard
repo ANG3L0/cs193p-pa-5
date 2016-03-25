@@ -81,7 +81,7 @@
                             <constraint firstItem="Jfm-j1-SNk" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rVl-cz-rrc"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Breakout" selectedImage="breakout" id="KHI-yX-DQU"/>
+                    <tabBarItem key="tabBarItem" title="Breakout" image="breakout.png" id="KHI-yX-DQU"/>
                     <connections>
                         <outlet property="gameView" destination="Jfm-j1-SNk" id="QHj-Jz-96b"/>
                         <outlet property="score" destination="znQ-7Q-9Xc" id="K8z-ne-Occ"/>
@@ -315,7 +315,7 @@
         <scene sceneID="wBN-5X-J0a">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="s7J-em-FHK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" id="4O2-XG-9T6"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="Settings" id="4O2-XG-9T6"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pCn-Rc-MUL">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -332,6 +332,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="breakout" width="480" height="480"/>
+        <image name="Settings" width="25" height="25"/>
+        <image name="breakout.png" width="16" height="16"/>
     </resources>
 </document>

@@ -103,6 +103,7 @@ class SettingsTableViewController: UITableViewController {
     }
     //MARK: - Drawing methods
     private func updateRowsLabel(scale: Float) {
+        print("updaterowslabel")
         if delegate != nil {
             if let rows = delegate?.getNumberOfRowsFrom(scale) {
                 if rowsLabel != nil {

@@ -28,15 +28,16 @@ differences exist between the two platforms (if any).
 - [x] Pausing your game when you navigate away from it (to go to settings) is a bit of a challenge (because you basically have to freeze the ball where it is, but when you come back, you have to get the ball going with the same linear velocity it had). Give it a try. It’s all about controlling the linear velocity of the ball.
 - [ ] Integrate the accelerometer into your application somehow (maybe real-life gravity affects the flight of the bouncing ball?). Check out the documentation for the CoreMotion framework. We will be covering CoreMotion later in the quarter, but this could still be a good exercise for practice learning something without benefit of a lecture explanation (good practice for your final project and maybe you even want to use CoreMotion in your final project and can’t wait for it to get covered in lecture). Plus it’s just kind of a cool feature in this app.
 
-## Demo
+## Demos
+###Changing number of rows
 First demo shows that I can change the number of rows.  
 ![rows](rows.gif)
 
-
+### Settings
 Second demo shows that the game is paused when I change settings.  It also shows that the red blocks/difficulty/drunk mode settings take into effect immediately when resuming the game.  
 ![settings](settings.gif)
 
-
+### Winning
 Third demo shows the winning screen.  
 ![victory](victory.gif)
 

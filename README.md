@@ -32,8 +32,10 @@ differences exist between the two platforms (if any).
 First demo shows that I can change the number of rows.  
 ![rows](rows.gif)
 
+
 Second demo shows that the game is paused when I change settings.  It also shows that the red blocks/difficulty/drunk mode settings take into effect immediately when resuming the game.  
 ![settings](settings.gif)
+
 
 Third demo shows the winning screen.  
 ![victory](victory.gif)
